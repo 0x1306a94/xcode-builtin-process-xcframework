@@ -58,3 +58,7 @@ LIBRARY_SEARCH_PATHS=$(inherited) $(USE_XX_LIB_ROOT_DIR)
 HEADER_SEARCH_PATHS=$(inherited) $(USE_XX_LIB_ROOT_DIR)/include
 ```
 * 然后在其他具体的`xcconfig`调整`USE_XX_LIB_ENV`为不同的值就可以了
+
+#### 在Apple开源的[swift-build](https://github.com/swiftlang/swift-build)中的实现
+* [Sources/SWBCore/Specs/Tools/ProcessXCFrameworkLibrary.swift](https://github.com/swiftlang/swift-build/blob/main/Sources/SWBCore/Specs/Tools/ProcessXCFrameworkLibrary.swift)
+* [Sources/SWBTaskExecution/TaskActions/ProcessXCFrameworkTaskAction.swift](https://github.com/swiftlang/swift-build/blob/main/Sources/SWBTaskExecution/TaskActions/ProcessXCFrameworkTaskAction.swift)
