@@ -16,16 +16,16 @@ builtin-process-xcframework --xcframework xx/XCFrameworkTest/OpenSSL.Package.xcf
 
 
 #### 如何使用此工具
-* 在目标`Target`的`Build Phases`中添加一个`New Run Script Phase`
+* 在目标`Target`的`Build Settings`中添加一个`Add User-Defined`
 ```bash
+# USE_RUST_NET_ENV=debug or USE_RUST_NET_ENV=release
+```
 
+* 继续在目标`Target`的`Build Phases`中添加一个`New Run Script Phase`
+```bash
 TOOL_PATH=${PROJECT_DIR}/tools/xcode-builtin-process-xcframework
 
-SOOURCE_LIB=${PROJECT_DIR}/${TARGET_NAME}/libs/release/xx.xcframework
-if [[ ${USE_XX_LIB_D} == 1 ]]; then
-    SOOURCE_LIB=${PROJECT_DIR}/${TARGET_NAME}/libs/debug/xx.xcframework
-fi
-
+SOOURCE_LIB=${PROJECT_DIR}/${TARGET_NAME}/libs/${USE_RUST_NET_ENV}/xx.xcframework
 TOOL_ARGS=("--xcframework" "${SOOURCE_LIB}" "--platform" "ios")
 if [[ "${PLATFORM_NAME}" == "iphonesimulator" ]]; then
     TOOL_ARGS+=("--environment" "simulator")
@@ -34,7 +34,13 @@ fi
 TOOL_ARGS+=("--target-path" "${BUILT_PRODUCTS_DIR}")
 echo "args: ${TOOL_ARGS[@]}" 
 $TOOL_PATH "${TOOL_ARGS[@]}"
+echo "" > ${BUILT_PRODUCTS_DIR}/process_xx.xcframework.${USE_RUST_NET_ENV}.stamp
 ```
+
+* 勾选`Based on dependency analysis`
+* 配置`Input/Output files` 避免每次build执行
+    * `Input Files: $(PROJECT_DIR)/$(TARGET_NAME)/libs/$(USE_RUST_NET_ENV)/xxx.xcframework`
+    * `Output Files: $(BUILT_PRODUCTS_DIR)/process_xx.xcframework.$(USE_RUST_NET_ENV).stamp`
 
 #### 后面发现也可以直接通过`xcconfig`配置实现
 * 比如有如下`xcconfig`
